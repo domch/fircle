@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthController } from './auth/auth.controller';
@@ -14,9 +15,18 @@ import { AuctionsService } from './auctions/auctions.service';
 import { NotificationsController } from './notifications/notifications.controller';
 import { NotificationsService } from './notifications/notifications.service';
 import { PrismaService } from './prisma.service';
+import { AuthMiddleware } from './middleware/auth.middleware';
+import { GtcAcceptedMiddleware } from './middleware/gtc.middleware';
+import { FircleRoleMiddleware } from './middleware/fircle-role.middleware';
+import { FircleRulesAcceptedMiddleware } from './middleware/fircle-rules.middleware';
 
 @Module({
-  imports: [],
+  imports: [
+    JwtModule.register({
+      secret: 'change-me',
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
   controllers: [
     AppController,
     AuthController,
@@ -35,6 +45,18 @@ import { PrismaService } from './prisma.service';
     AuctionsService,
     PrismaService,
     NotificationsService,
+    AuthMiddleware,
+    GtcAcceptedMiddleware,
+    FircleRoleMiddleware,
+    FircleRulesAcceptedMiddleware,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware, GtcAcceptedMiddleware).forRoutes('*');
+
+    consumer
+      .apply(FircleRoleMiddleware, FircleRulesAcceptedMiddleware)
+      .forRoutes({ path: 'fircles/:id*', method: RequestMethod.ALL });
+  }
+}
