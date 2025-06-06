@@ -1,0 +1,8 @@
+{
+  "name": "fircle-monorepo",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "test": "npm --workspaces --if-present test"
+  }
+}
