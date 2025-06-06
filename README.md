@@ -1,22 +1,24 @@
-# fircle
-Yet another app for friend circles!
+# Fircles Monorepo
 
-This repository is organized as a Node.js monorepo. It currently contains two packages under `packages/`:
+This repository contains the code for **Fircles** – a social friend circles app for sharing items. The project is organised as a [TurboRepo](https://turbo.build/) monorepo with the following packages:
 
-- **api**: an Express API with a `/health` endpoint
-- **web**: a small utility module for the web client
+- **apps/web** – Next.js 14 frontend using React, Tailwind CSS and Zustand
+- **apps/api** – NestJS backend using Prisma ORM and PostgreSQL
+- **packages/types** – shared TypeScript models
 
 ## Development
 
-Install dependencies and run tests for all packages:
+Install dependencies for all workspaces and run the build pipeline:
 
 ```bash
 npm install
+npm run build
+```
+
+Run tests across all packages:
+
+```bash
 npm test
 ```
 
-You can start the API server with:
-
-```bash
-npm start --workspace=@fircle/api
-```
+Each package can also be started individually using the scripts defined in its `package.json`.
