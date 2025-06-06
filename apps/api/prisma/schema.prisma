@@ -32,6 +32,8 @@ model User {
   email          String    @unique
   profilePicture String?
   acceptedGTC    Boolean   @default(false)
+  gtcVersion     String?
+  gtcAcceptedAt  DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 

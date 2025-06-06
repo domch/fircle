@@ -12,4 +12,15 @@ export class UsersService {
   updateProfile(userId: number, data: any) {
     return this.prisma.user.update({ where: { id: userId }, data });
   }
+
+  acceptGtc(userId: number, version: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        acceptedGTC: true,
+        gtcVersion: version,
+        gtcAcceptedAt: new Date(),
+      },
+    });
+  }
 }

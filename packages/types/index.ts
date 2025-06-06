@@ -8,5 +8,7 @@ export interface User {
   id: number;
   name: string;
   acceptedGTC?: boolean;
+  gtcVersion?: string;
+  gtcAcceptedAt?: string;
   acceptedFircleRules?: number[];
 }
