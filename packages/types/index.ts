@@ -7,4 +7,6 @@ export interface Item {
 export interface User {
   id: number;
   name: string;
+  acceptedGTC?: boolean;
+  acceptedFircleRules?: number[];
 }
