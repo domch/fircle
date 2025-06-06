@@ -45,6 +45,8 @@ model User {
   itemsHeld    Item[]   @relation("ItemHolder")
   bids         Bid[]
   requests     LendingRequest[] @relation("Requestor")
+  ownershipChangesFrom OwnershipChange[] @relation("OwnershipChangesFrom")
+  ownershipChangesTo   OwnershipChange[] @relation("OwnershipChangesTo")
 }
 
 model Fircle {
@@ -84,6 +86,7 @@ model Item {
   lendingRequests LendingRequest[]
   auctions        Auction[]
   bids            Bid[]
+  ownershipChanges OwnershipChange[]
 }
 
 model LendingRequest {
@@ -129,5 +132,17 @@ model Notification {
   message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model OwnershipChange {
+  id              Int      @id @default(autoincrement())
+  itemId          Int
+  item            Item     @relation(fields: [itemId], references: [id])
+  fromUserId      Int?
+  fromUser        User?    @relation("OwnershipChangesFrom", fields: [fromUserId], references: [id])
+  toUserId        Int
+  toUser          User     @relation("OwnershipChangesTo", fields: [toUserId], references: [id])
+  profitPercentage Float?
+  createdAt       DateTime @default(now())
 }
 

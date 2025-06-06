@@ -15,6 +15,7 @@ import { AuctionsService } from './auctions/auctions.service';
 import { NotificationsController } from './notifications/notifications.controller';
 import { GtcController } from './gtc/gtc.controller';
 import { NotificationsService } from './notifications/notifications.service';
+import { LendingService } from './lending/lending.service';
 import { PrismaService } from './prisma.service';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { GtcAcceptedMiddleware } from './middleware/gtc.middleware';
@@ -46,6 +47,7 @@ import { FircleRulesAcceptedMiddleware } from './middleware/fircle-rules.middlew
     ItemsService,
     AuctionsService,
     PrismaService,
+    LendingService,
     NotificationsService,
     AuthMiddleware,
     GtcAcceptedMiddleware,
