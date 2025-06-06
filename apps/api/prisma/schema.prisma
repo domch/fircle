@@ -103,17 +103,29 @@ model Auction {
   fircle   Fircle?  @relation(fields: [fircleId], references: [id])
   bidders  User[]   @relation("AuctionBidders")
   winningBidId Int?
-  winningBid   Bid?  @relation(fields: [winningBidId], references: [id])
-  bids     Bid[]
+  winningBid   Bid?  @relation("WinningBid", fields: [winningBidId], references: [id])
+  bids     Bid[] @relation("AuctionBids")
   createdAt DateTime @default(now())
 }
 
 model Bid {
   id        Int      @id @default(autoincrement())
   auctionId Int
-  auction   Auction  @relation(fields: [auctionId], references: [id])
+  auction   Auction  @relation("AuctionBids", fields: [auctionId], references: [id])
+  winningFor Auction? @relation("WinningBid")
   bidderId  Int
   bidder    User     @relation(fields: [bidderId], references: [id])
   amount    Float
   createdAt DateTime @default(now())
 }
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+

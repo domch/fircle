@@ -11,6 +11,8 @@ import { ItemController } from './items/items.controller';
 import { ItemsService } from './items/items.service';
 import { AuctionController } from './auctions/auctions.controller';
 import { AuctionsService } from './auctions/auctions.service';
+import { NotificationsController } from './notifications/notifications.controller';
+import { NotificationsService } from './notifications/notifications.service';
 import { PrismaService } from './prisma.service';
 
 @Module({
@@ -22,6 +24,7 @@ import { PrismaService } from './prisma.service';
     FircleController,
     ItemController,
     AuctionController,
+    NotificationsController,
   ],
   providers: [
     AppService,
@@ -31,6 +34,7 @@ import { PrismaService } from './prisma.service';
     ItemsService,
     AuctionsService,
     PrismaService,
+    NotificationsService,
   ],
 })
 export class AppModule {}
