@@ -1,6 +1,119 @@
-// Example Prisma schema
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum FircleState {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum OfferType {
+  LEND
+  GIFT
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id             Int       @id @default(autoincrement())
+  oidcSub        String    @unique
+  name           String
+  email          String    @unique
+  profilePicture String?
+  acceptedGTC    Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  ownedFircles Fircle[] @relation("OwnedFircles")
+  adminOf      Fircle[] @relation("FircleAdmins")
+  memberOf     Fircle[] @relation("FircleMembers")
+
+  itemsOwned   Item[]   @relation("ItemOwner")
+  itemsHeld    Item[]   @relation("ItemHolder")
+  bids         Bid[]
+  requests     LendingRequest[] @relation("Requestor")
+}
+
+model Fircle {
+  id          Int      @id @default(autoincrement())
+  name        String
+  icon        String?
+  description String?
+  externalRef String?
+  rules       String?
+  state       FircleState @default(ACTIVE)
+
+  ownerId Int
+  owner   User   @relation("OwnedFircles", fields: [ownerId], references: [id])
+  admins  User[] @relation("FircleAdmins")
+  members User[] @relation("FircleMembers")
+
+  auctions Auction[]
+}
+
+model Item {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float?
+  lendTime    Int?
+  pictures    String[]
+  videos      String[]
+  location    String?
+  profitPercentage Float?
+  ownershipHistory Json?
+
+  ownerId        Int
+  owner          User   @relation("ItemOwner", fields: [ownerId], references: [id])
+  currentHolderId Int?
+  currentHolder  User?  @relation("ItemHolder", fields: [currentHolderId], references: [id])
+
+  lendingRequests LendingRequest[]
+  auctions        Auction[]
+  bids            Bid[]
+}
+
+model LendingRequest {
+  id            Int           @id @default(autoincrement())
+  itemId        Int
+  item          Item          @relation(fields: [itemId], references: [id])
+  requestedById Int
+  requestedBy   User          @relation("Requestor", fields: [requestedById], references: [id])
+  offerType     OfferType
+  status        RequestStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+}
+
+model Auction {
+  id       Int      @id @default(autoincrement())
+  itemId   Int?
+  item     Item?    @relation(fields: [itemId], references: [id])
+  fircleId Int?
+  fircle   Fircle?  @relation(fields: [fircleId], references: [id])
+  bidders  User[]   @relation("AuctionBidders")
+  winningBidId Int?
+  winningBid   Bid?  @relation(fields: [winningBidId], references: [id])
+  bids     Bid[]
+  createdAt DateTime @default(now())
+}
+
+model Bid {
+  id        Int      @id @default(autoincrement())
+  auctionId Int
+  auction   Auction  @relation(fields: [auctionId], references: [id])
+  bidderId  Int
+  bidder    User     @relation(fields: [bidderId], references: [id])
+  amount    Float
+  createdAt DateTime @default(now())
 }
