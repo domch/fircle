@@ -11,6 +11,7 @@ enum FircleState {
   ACTIVE
   INACTIVE
   ARCHIVED
+  ABANDONED
 }
 
 enum OfferType {
@@ -57,6 +58,8 @@ model Fircle {
   externalRef String?
   rules       String?
   state       FircleState @default(ACTIVE)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   ownerId Int
   owner   User   @relation("OwnedFircles", fields: [ownerId], references: [id])
