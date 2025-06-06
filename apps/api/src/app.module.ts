@@ -13,6 +13,7 @@ import { ItemsService } from './items/items.service';
 import { AuctionController } from './auctions/auctions.controller';
 import { AuctionsService } from './auctions/auctions.service';
 import { NotificationsController } from './notifications/notifications.controller';
+import { GtcController } from './gtc/gtc.controller';
 import { NotificationsService } from './notifications/notifications.service';
 import { PrismaService } from './prisma.service';
 import { AuthMiddleware } from './middleware/auth.middleware';
@@ -35,6 +36,7 @@ import { FircleRulesAcceptedMiddleware } from './middleware/fircle-rules.middlew
     ItemController,
     AuctionController,
     NotificationsController,
+    GtcController,
   ],
   providers: [
     AppService,
@@ -53,7 +55,11 @@ import { FircleRulesAcceptedMiddleware } from './middleware/fircle-rules.middlew
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware, GtcAcceptedMiddleware).forRoutes('*');
+    consumer.apply(AuthMiddleware).forRoutes('*');
+    consumer
+      .apply(GtcAcceptedMiddleware)
+      .exclude('gtc', { path: 'users/:id/accept-gtc', method: RequestMethod.POST })
+      .forRoutes('*');
 
     consumer
       .apply(FircleRoleMiddleware, FircleRulesAcceptedMiddleware)
