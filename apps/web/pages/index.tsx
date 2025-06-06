@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import useStore from '../store';
 
 export default function Home() {
@@ -11,6 +12,11 @@ export default function Home() {
       <button className="px-2 py-1 bg-blue-500 text-white" onClick={increment}>
         Increment
       </button>
+      <div className="mt-4">
+        <Link href="/login" className="text-blue-500 underline">
+          Go to Login
+        </Link>
+      </div>
     </main>
   );
 }
