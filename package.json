@@ -1,8 +1,12 @@
 {
-  "name": "fircle-monorepo",
+  "name": "fircle",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "test": "npm --workspaces --if-present test"
+    "build": "turbo build",
+    "test": "turbo test"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.8"
   }
 }
