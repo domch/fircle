@@ -6,7 +6,7 @@ module.exports = {
       diagnostics: false,
     },
   },
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/test'],
   coverageDirectory: '<rootDir>/coverage',
   collectCoverageFrom: ['src/**/*.ts', '!src/main.ts'],
 };
