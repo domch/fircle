@@ -1,0 +1,41 @@
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/test-client"
+}
+
+model User {
+  id      Int     @id @default(autoincrement())
+  email   String  @unique
+  name    String
+  fircles Fircle[] @relation("Members")
+  items   Item[]
+  requests LendingRequest[] @relation("Requestor")
+}
+
+model Fircle {
+  id      Int     @id @default(autoincrement())
+  name    String
+  members User[] @relation("Members")
+}
+
+model Item {
+  id      Int     @id @default(autoincrement())
+  name    String
+  ownerId Int
+  owner   User   @relation(fields: [ownerId], references: [id])
+  requests LendingRequest[]
+}
+
+model LendingRequest {
+  id            Int    @id @default(autoincrement())
+  itemId        Int
+  item          Item   @relation(fields: [itemId], references: [id])
+  requestedById Int
+  requestedBy   User   @relation("Requestor", fields: [requestedById], references: [id])
+  offerType     String
+}
